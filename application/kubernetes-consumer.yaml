@@ -1,0 +1,141 @@
+# ============================================================================
+# Consumer Service (Stateless, will be autoscaled by KEDA)
+# ============================================================================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-consumer
+  namespace: kafka
+  labels:
+    app: kafka-consumer
+    version: v1
+spec:
+  replicas: 1  # Start with 2; KEDA will scale based on lag.
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: kafka-consumer
+  template:
+    metadata:
+      labels:
+        app: kafka-consumer
+        version: v1
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8081"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: default
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      
+      # Anti-affinity: spread replicas across nodes for high availability.
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - kafka-consumer
+              topologyKey: kubernetes.io/hostname
+      
+      containers:
+      - name: consumer
+        image: kafka-consumer:v2  # Build with: docker build -t kafka-consumer . --build-arg SERVICE=consumer
+        imagePullPolicy: IfNotPresent
+        
+        env:
+        - name: SERVICE
+          value: "consumer"
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "my-cluster-kafka-bootstrap.kafka.svc:9092"
+        - name: KAFKA_TOPIC
+          value: "orders"
+        - name: KAFKA_CONSUMER_GROUP
+          value: "order-processors"
+        - name: PROCESSING_DELAY_SECONDS
+          value: "0.1"  # Adjust: simulates business logic processing time.
+        - name: LOG_LEVEL
+          value: "INFO"
+        - name: HTTP_PORT
+          value: "8081"
+        - name: HOSTNAME  # For client.id uniqueness.
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        
+        ports:
+        - name: http
+          containerPort: 8081
+          protocol: TCP
+        
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 15
+          periodSeconds: 15
+          timeoutSeconds: 3
+          failureThreshold: 3
+        
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 2
+        
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+        
+        # Graceful termination: consumer finishes current message and commits offset.
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 5"]
+
+---
+# Service for Consumer (for internal DNS and monitoring).
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-consumer
+  namespace: kafka
+  labels:
+    app: kafka-consumer
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8081
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: kafka-consumer

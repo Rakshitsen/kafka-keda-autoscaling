@@ -1,0 +1,3 @@
+prometheus:
+  operator:
+    enabled: true

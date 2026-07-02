@@ -1,0 +1,137 @@
+# ============================================================================
+# Kubernetes Deployments for Kafka Producer and Consumer
+# ============================================================================
+# Deploy both services to the same namespace as your Kafka cluster (kafka).
+# Producer: generates events at a configurable rate.
+# Consumer: processes events with a configurable delay, scaled by KEDA based on lag.
+# ============================================================================
+
+
+
+# ============================================================================
+# Producer Service
+# ============================================================================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-producer
+  namespace: kafka
+  labels:
+    app: kafka-producer
+    version: v1
+spec:
+  replicas: 1  # Single producer; scale horizontally if needed (careful with ordering).
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: kafka-producer
+  template:
+    metadata:
+      labels:
+        app: kafka-producer
+        version: v1
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: default
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: producer
+        image: kafka-producer:v2  # Build with: docker build -t kafka-producer . --build-arg SERVICE=producer
+        imagePullPolicy: IfNotPresent
+        
+        # Service: must match the image you build.
+        env:
+        - name: SERVICE
+          value: "producer"
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "my-cluster-kafka-bootstrap.kafka.svc:9092"  # Update to your broker address.
+        - name: KAFKA_TOPIC
+          value: "orders" # Topics to produce to (comma-separated).
+        - name: MESSAGE_RATE_PER_SEC
+          value: "1"  # Adjust: messages per second.
+        - name: KAFKA_PRODUCER_BATCH_SIZE
+          value: "1000"
+        - name: KAFKA_PRODUCER_LINGER_MS
+          value: "100"
+        - name: KAFKA_COMPRESSION_TYPE
+          value: "snappy"
+        - name: LOG_LEVEL
+          value: "INFO"
+        - name: HTTP_PORT
+          value: "8080"
+        
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 3
+        
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+        
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+        
+        # Graceful termination: wait for producer to flush pending messages.
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 5"]  # Allow 5s for graceful shutdown.
+
+---
+# Service for Producer (optional, for internal DNS).
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-producer
+  namespace: kafka
+  labels:
+    app: kafka-producer
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: kafka-producer
