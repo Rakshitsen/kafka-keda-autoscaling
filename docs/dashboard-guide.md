@@ -10,7 +10,9 @@ While other dashboards might show you CPU usage or message throughput, this one 
 
 The dashboard is organized to be read from left to right, following the flow of data and decisions through the system.
 
-*(Placeholder for a full dashboard screenshot)*
+The same scaling loop is summarized in this diagram:
+
+![alt text](../observability/grafana/dashboard.png)
 
 The logical flow is:
 1.  **Producer Activity**: How many messages are being sent into the system?

@@ -1,0 +1,96 @@
+<mxfile host="app.diagrams.net" modified="2026-07-03T00:00:00.000Z" agent="Codex" version="24.7.17" type="device">
+  <diagram id="architecture" name="Architecture">
+    <mxGraphModel dx="1600" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2" value="Kubernetes Cluster" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#1f1f1f;fillColor=#ffffff;fontStyle=1;fontSize=22;align=center;verticalAlign=top;spacingTop=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="1320" height="1180" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="Producer Deployment" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#1565c0;fillColor=#e3f2fd;fontStyle=1;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="120" y="120" width="230" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="Kafka Cluster (Strimzi)&#xa;Orders Topic&#xa;Partitions" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#2e7d32;fillColor=#e8f5e9;fontStyle=1;fontSize=18;align=center;" vertex="1" parent="1">
+          <mxGeometry x="430" y="140" width="350" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="Consumer Deployment" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#6a1b9a;fillColor=#f3e5f5;fontStyle=1;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="850" y="120" width="240" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="KEDA" style="ellipse;whiteSpace=wrap;html=1;strokeColor=#8e24aa;fillColor=#faf0ff;fontStyle=1;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="910" y="300" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="HPA" style="ellipse;whiteSpace=wrap;html=1;strokeColor=#ef6c00;fillColor=#fff3e0;fontStyle=1;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="910" y="430" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="8" value="Producer Metrics" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#1565c0;fillColor=#e3f2fd;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="110" y="650" width="180" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="Consumer Metrics" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#6a1b9a;fillColor=#f3e5f5;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="110" y="730" width="180" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="10" value="Kafka Exporter" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#2e7d32;fillColor=#e8f5e9;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="110" y="810" width="180" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="KEDA Metrics" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#8e24aa;fillColor=#faf0ff;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="110" y="890" width="180" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="12" value="HPA Metrics" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#ef6c00;fillColor=#fff3e0;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="110" y="970" width="180" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="13" value="Prometheus" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#37474f;fillColor=#eceff1;fontStyle=1;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="500" y="830" width="220" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="14" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#37474f;fillColor=#eceff1;fontStyle=1;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="530" y="960" width="160" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;strokeColor=#455a64;" edge="1" parent="1" source="3" target="4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;strokeColor=#455a64;" edge="1" parent="1" source="4" target="5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;strokeColor=#8e24aa;" edge="1" parent="1" source="6" target="5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;strokeColor=#ef6c00;" edge="1" parent="1" source="7" target="6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;strokeWidth=2;strokeColor=#455a64;" edge="1" parent="1" source="8" target="13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;strokeWidth=2;strokeColor=#455a64;" edge="1" parent="1" source="9" target="13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;strokeWidth=2;strokeColor=#455a64;" edge="1" parent="1" source="10" target="13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;strokeWidth=2;strokeColor=#455a64;" edge="1" parent="1" source="11" target="13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;strokeWidth=2;strokeColor=#455a64;" edge="1" parent="1" source="12" target="13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;strokeWidth=2;strokeColor=#455a64;" edge="1" parent="1" source="13" target="14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="30" value="" style="line;strokeWidth=2;strokeColor=#1f1f1f;" vertex="1" parent="1">
+          <mxGeometry x="70" y="600" width="1260" height="1" as="geometry" />
+        </mxCell>
+        <mxCell id="31" value="Observability" style="text;html=1;align=left;verticalAlign=middle;fontStyle=1;fontSize=18;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="70" y="620" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="32" value="Producer" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="145" y="230" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="33" value="Kafka data path" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="465" y="260" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="34" value="Consumer" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="910" y="230" width="120" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

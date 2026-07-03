@@ -157,20 +157,7 @@ That final step is important because it gives the system at-least-once delivery 
 
 ## Scaling Flow
 
-```text
-Producer Rate ↑
-
-↓
-
-Consumer Lag ↑
-
-↓
-
-Lag
-
-├── KEDA Kafka Scaler → External Metrics → HPA → Consumer Deployment → More Consumers → Lag ↓
-└── Kafka Exporter → Prometheus → Grafana
-```
+![Scaling Flow Diagram](../diagrams/scaling-flow.png)
 
 How the flow works:
 

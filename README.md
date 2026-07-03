@@ -57,7 +57,11 @@ HPA Decisions
 
 ## Architecture
 
-!Architecture Diagram
+![Architecture Diagram](diagrams/architecture.png)
+
+The scaling loop that explains consumer replica changes is shown here:
+
+![Scaling Flow Diagram](diagrams/scaling-flow.png)
 
 ## Repository Structure
 
