@@ -119,7 +119,19 @@ Now, deploy the Python producer and consumer applications.
 
 The deployment flow for the applications is as follows:
 
-`Build producer/consumer image ↓ Push image to registry ↓ Update deployment manifests ↓ Deploy applications`
+Build producer/consumer image 
+
+ ↓
+
+Push image to registry
+
+ ↓ 
+ 
+Update deployment manifests
+
+ ↓ 
+ 
+Deploy applications`
 
 Refer to the `../application/README.md` for detailed instructions on building and pushing the container images.
 

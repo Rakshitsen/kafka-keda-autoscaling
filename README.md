@@ -10,7 +10,7 @@ This project demonstrates how to use KEDA to monitor Kafka consumer lag and auto
 
 ## Key Features
 
-- **Lag-Based Autoscaling**: Consumer deployment scales from 2 to 10 replicas based on Kafka lag using KEDA.
+- **Lag-Based Autoscaling**: Consumer deployment scales from 0 to 10 replicas based on Kafka lag using KEDA.
 - **Explicit Kafka Semantics**: Demonstrates manual offset commits for at-least-once delivery and graceful shutdown handling.
 - **End-to-End Observability**: Includes a Grafana dashboard to correlate producer throughput, consumer lag, and KEDA scaling decisions.
 - **Production-Ready Services**: Python producer/consumer with structured logging, health endpoints, and efficient configuration.
@@ -41,7 +41,7 @@ KEDA Metrics
 
 HPA Decisions
 
-...allowing every scaling event to be explained using telemetry.
+
 
 ## Technology Stack
 
@@ -141,6 +141,3 @@ See [docs/dashboard-guide.md](docs/dashboard-guide.md) for setup and usage.
 - [docs/architecture.md](docs/architecture.md)
 - [docs/deployment-guide.md](docs/deployment-guide.md)
 
-## License
-
-See [LICENSE](LICENSE).
